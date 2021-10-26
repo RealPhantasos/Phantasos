@@ -16,9 +16,6 @@ class Timer:
 
     def __exit__(self, *args):
         self.elapsed = time.time() - self._timer
-        
-        
-class ConnError(Exception): pass
 
 
 def threaded_map(fn: Callable, data: Iterable, max_workers: int = None) -> Iterator:
