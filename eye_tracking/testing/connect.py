@@ -8,8 +8,7 @@ Based on docs from:
 """
 
 import os.path as osp
-import sys
-sys.path.append(osp.join(osp.realpath(__file__), *(2*[osp.pardir])))  # add parent dir to include path
+import sys; sys.path.append(osp.join(osp.realpath(__file__), *(2*[osp.pardir])))  # add parent dir to include path
 from utils import Timer
 import re
 from collections import deque
@@ -21,8 +20,8 @@ except ImportError:
     
 import tobii_research as tr
 
-DEBUG = 0
-if DEBUG: ic.disable()
+DEBUG = 1
+if not DEBUG: ic.disable()
 
 ignore_pattern = re.compile(r'__?.+(__)?')
 
@@ -38,7 +37,7 @@ def main():
     try:
         eyetracker = devices[0]
     except Exception as e:
-        raise ConnectionError()
+        raise ConnectionError('Couldn\'t find device!')
     
     ic(t.elapsed)
     addr = ic(eyetracker.address)
