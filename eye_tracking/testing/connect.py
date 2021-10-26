@@ -7,12 +7,12 @@ Based on docs from:
     https://developer.tobiipro.com/python/python-sdk-reference-guide.html
 """
 
-import os.path as osp, os
+import os.path as osp
 import sys
-cwd = osp.dirname(osp.realpath(__file__))
-sys.path.append(osp.dirname(cwd))
-import utils
+sys.path.append(osp.join(osp.realpath(__file__), *(2*[osp.pardir])))  # add parent dir to include path
+from utils import Timer
 import re
+from collections import deque
 
 try:
     from icecream import ic
@@ -24,22 +24,23 @@ import tobii_research as tr
 DEBUG = 0
 if DEBUG: ic.disable()
 
-ignore_pattern = re.compile(r'__.+__')
+ignore_pattern = re.compile(r'__?.+(__)?')
 
-def show_attr(obj):
-    list(map(print, filter(lambda attr: not re.fullmatch(ignore_pattern, attr), dir(obj))))
+def show_attrs(obj):
+    """Prints all available attrs of obj"""
+    deque(map(print, filter(lambda attr: not re.fullmatch(ignore_pattern, attr), dir(obj))), maxlen=0)
 
 
 def main():
-    with utils.Timer() as t:
-        available = tr.find_all_eyetrackers()
-    ic(t.elapsed)
+    with Timer() as t:
+        devices = tr.find_all_eyetrackers()
     
     try:
-        eyetracker = available[0]
+        eyetracker = devices[0]
     except Exception as e:
         raise ConnectionError()
-
+    
+    ic(t.elapsed)
     addr = ic(eyetracker.address)
     model = (eyetracker.model)
     device_name = ic(eyetracker.device_name)
@@ -47,9 +48,6 @@ def main():
     runtime_version = ic(eyetracker.runtime_version)
     serial_number = ic(eyetracker.serial_number)
     
-    
-    
-
 
 if __name__ == '__main__':
     main()
