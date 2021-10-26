@@ -41,7 +41,7 @@ def main():
     
     ic(t.elapsed)
     addr = ic(eyetracker.address)
-    model = (eyetracker.model)
+    model = ic(eyetracker.model)
     device_name = ic(eyetracker.device_name)
     firmware_version  = ic(eyetracker.firmware_version)
     runtime_version = ic(eyetracker.runtime_version)
