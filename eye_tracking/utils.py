@@ -7,6 +7,7 @@ from functools import wraps
 import time
 from typing import Callable, Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
+from collections import deque
 
 class Timer:
     """This context manager allows timing blocks of code."""
@@ -21,6 +22,13 @@ class Timer:
 def threaded_map(fn: Callable, data: Iterable, max_workers: int = None) -> Iterator:
     with ThreadPoolExecutor(max_workers = max_workers) as executor:
         return executor.map(fn, data)
+    
+    
+ignore_pattern = re.compile(r'__?.+(__)?')
+
+def show_attrs(obj):
+    """Prints all available attrs of obj"""
+    deque(map(print, filter(lambda attr: not re.fullmatch(ignore_pattern, attr), dir(obj))), maxlen=0)
 
 
 def retryable(
